@@ -1,48 +1,32 @@
-# ckpt_1782093159.pth — 轻量级 Transformer 语言模型
+# 轻量级 Transformer 语言模型
 
-## 模型概览
+本项目是一个基于《三国演义》文本训练的微型 Transformer 语言模型。模型文件仅有 1.8 MB，可在手机端或电脑端本地 CPU 环境下运行。
 
-- 模型文件名：`ckpt_1782093159.pth`
-- 文件大小：2.38 MB
-- 参数量：约 15054 字节（实际参数规模约 4000 万）
-- 架构：Transformer Decoder，15 层，4 头注意力，128 维嵌入
-- 训练环境：Google Colab / Kaggle / Modal（GPU T4 / L4）
-- 训练数据：中文新闻语料 + 合成文本（约 5 万字）
-- 硬件需求：极低，CPU 即可推理，GPU 可加速训练
+## 包含文件
+- `chat_dialogue.py`：加载模型并进行交互式对话的程序。
+- `ckpt_1782093159.pth`：训练好的模型权重文件。
 
-## 模型能力
+## 运行与环境配置 (手机/电脑通用)
 
-- 中文续写与生成：给定开头，可自动生成通顺的中文句子
-- 简单问答与对话：支持短句问答与上下文交互
-- 可迁移、可扩展：支持断点续训（软加载），架构可升级
+将 `chat_dialogue.py` 和 `ckpt_1782093159.pth` 放入同一个文件夹。打开命令行终端并进入该文件夹，依次执行以下命令：
 
-## 训练参数
+pkg update -y
+pkg upgrade -y
+pkg install python -y
+pkg install python-torch -y
+pip install torch
+python chat_dialogue.py
 
-- 层数：15
-- 嵌入维度：128
-- 注意力头数：4
-- 优化器：AdamW
-- 学习率：0.001
-- 批次大小：单序列
-- 训练步数：500 步 / 轮（可循环）
+手机端使用 Termux 运行以上所有命令。电脑端不需要执行 pkg 相关命令，仅需执行 pip install torch 和 python chat_dialogue.py。
 
-## 性能表现
+## 使用建议
 
-- 在 5 万字中文语料上训练 500 步后，Loss 可降至 2.0 以下
-- 生成文本具备基本中文语法结构
-- 模型文件仅 2.38 MB，适合嵌入移动端或边缘设备
+由于模型仅基于《三国演义》文本训练，建议输入三国人物名、地名或文言句式进行交互，例如：刘备、曹操、赤壁之战、孔明曰。该模型属于小型神经网络的单轮续写，不具备上下文记忆能力，生成的内容可能存在跳跃或不通顺的情况，属于正常现象。输入 exit 或 quit 可退出程序。
 
-## 使用方式
+## 更新日志
 
-```python
-import torch
-
-model = TinyTransformer(v, embed_dim=128, heads=4, layers=15)
-model.load_state_dict(torch.load("ckpt_1782093159.pth", map_location="cpu"))
-model.eval()
-
-# 输入示例
-start = "人工智能"
-inp = torch.tensor([[stoi[c] for c in start]], dtype=torch.long)
-output = model.generate(inp, max_len=50)
-print(output)
+2026-06-25
+- 发布初始版本。
+- 支持在手机端 Termux 和电脑端 Windows / macOS / Linux 运行。
+- 实现交互式对话功能。
+- 提供基于《三国演义》前 2 万字训练的模型权重文件。
